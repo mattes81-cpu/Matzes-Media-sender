@@ -7,17 +7,17 @@ function renderMeds(){
  const el=document.getElementById("medentries");el.replaceChildren();
  if(!medications.length){el.textContent="Noch keine Medikamente eingetragen.";return}
  for(const m of medications){
-  const d=document.createElement("div");d.className="entry";
-  const title=document.createElement("strong");title.textContent=m.name+" — "+m.dose;d.appendChild(title);
-  const times=document.createElement("p");times.textContent="Uhrzeiten: "+m.times.join(", ");d.appendChild(times);
+  const d=document.createElement("details");d.className="entry";
+  const summary=document.createElement("summary");summary.textContent=m.name+" — "+m.dose+" · "+m.times.join(", ");d.appendChild(summary);
+  const actions=document.createElement("div");actions.className="entry-actions";
   const edit=document.createElement("button");edit.type="button";edit.textContent="Bearbeiten";edit.onclick=()=>{
    document.getElementById("medid").value=m.id;document.getElementById("medname").value=m.name;
    document.getElementById("meddose").value=m.dose;document.getElementById("medtimes").value=m.times.join(", ");
    document.getElementById("medsave").textContent="Änderungen speichern";document.getElementById("medform").scrollIntoView({behavior:"smooth"});
-  };d.appendChild(edit);
+  };actions.appendChild(edit);
   const del=document.createElement("button");del.type="button";del.textContent="Löschen";del.style.background="#9d3545";
-  del.onclick=()=>{if(confirm("Dieses Medikament wirklich löschen?")){medications=medications.filter(x=>x.id!==m.id);if(saveMeds())renderMeds()}};d.appendChild(del);
-  el.appendChild(d)
+  del.onclick=()=>{if(confirm("Dieses Medikament wirklich löschen?")){medications=medications.filter(x=>x.id!==m.id);if(saveMeds())renderMeds()}};actions.appendChild(del);
+  d.appendChild(actions);el.appendChild(d)
  }
 }
 document.getElementById("medform").onsubmit=e=>{
