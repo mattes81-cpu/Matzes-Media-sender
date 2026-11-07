@@ -1,44 +1,181 @@
-{
-  "format": "matzes-medi-sender-full-backup",
-  "version": 1,
-  "createdAt": "2026-11-07T10:04:31.550Z",
-  "data": {
-    "blood": [],
-    "medications": [
-      {
-        "id": "17940435201700.9453677892955483",
-        "name": "Test",
-        "dose": ",5",
-        "times": [
-          "20:25"
-        ],
-        "frequency": "daily",
-        "days": [],
-        "stock": 29,
-        "units": 1,
-        "threshold": 7
-      }
-    ],
-    "intakes": {
-      "[\"17940435201700.9453677892955483\",\"2026-11-07\",\"20:25\"]": {
-        "date": "2026-11-07",
-        "time": "20:25",
-        "medId": "17940435201700.9453677892955483",
-        "units": 1
-      }
-    },
-    "doctors": [
-      {
-        "id": "17940405497300.13363907020464683",
-        "name": "Dr Steigenberger",
-        "specialty": "Allgemein Medizin",
-        "address": "",
-        "phone": "",
-        "email": "",
-        "web": ""
-      }
-    ],
-    "appointments": [],
-    "weights": []
-  }
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Matzes Medi-Sender</title><style>body{font:17px -apple-system,BlinkMacSystemFont,sans-serif;background:#eef5ff;color:#17345b;margin:0;padding:20px}main{max-width:520px;margin:auto}header,.card{background:white;border-radius:18px;padding:20px;margin:15px 0;box-shadow:0 2px 10px #abc3df55}h1{color:#1261ae;font-size:26px}h2{font-size:21px}button{background:#1261ae;color:white;border:0;border-radius:12px;padding:14px;font-size:17px;margin:5px 0;width:100%}input{box-sizing:border-box;width:100%;padding:12px;margin:5px 0 12px;border:1px solid #abc;border-radius:9px;font-size:17px}label{display:block}small{color:#53677e}.entry{padding:10px 0;border-bottom:1px solid #ddd}nav button{background:#dcecff;color:#164c83}details.entry{padding:0;border-bottom:1px solid #ddd}details.entry summary{cursor:pointer;padding:15px 5px;line-height:1.5;list-style:none}details.entry summary::-webkit-details-marker{display:none}details.entry summary:after{content:"  ▾";color:#1261ae}details.entry[open] summary:after{content:"  ▴"}details.entry .entry-actions{padding:0 5px 12px}details.entry summary:focus-visible{outline:2px solid #1261ae;border-radius:8px}#app{display:none}canvas{width:100%;max-width:100%;height:230px;border:1px solid #dcecff;border-radius:12px} .weight-info{background:#eef5ff;border-radius:10px;padding:12px;margin:12px 0}</style>
+<style id="printStyle">#doctorPrint{display:none}@media print{@page{size:A4;margin:15mm}body{background:white;color:#172b4d;padding:0;font:11pt -apple-system,Arial,sans-serif}main{max-width:none}#welcome,#app{display:none!important}#doctorPrint{display:block!important}#doctorPrint h1{font-size:21pt;color:#1261ae}#doctorPrint h2{font-size:14pt;color:#1261ae;border-bottom:1px solid #abc;padding-bottom:5px;margin-top:20px}#doctorPrint table{border-collapse:collapse;width:100%;font-size:10pt}#doctorPrint th,#doctorPrint td{border-bottom:1px solid #ccd7e3;text-align:left;padding:6px 4px;vertical-align:top}#doctorPrint tr{break-inside:avoid}#doctorPrint p{line-height:1.45}}
+</style></head><body><main><section id="welcome" class="card"><h1>💙 Willkommen bei Matzes Medi-Sender!</h1><p><b>Deine Gesundheit. Dein Überblick. Alles an einem Ort.</b></p><p>Behalte deinen Blutdruck, deine Medikamente und deine Arzttermine ganz einfach im Blick.</p><button onclick="start()">Zur Startseite</button></section><section id="app"><header><h1>Matzes Medi-Sender</h1><p>Dein persönliches Gesundheitstagebuch</p></header><nav><button onclick="show('home')">Startseite</button></nav><section id="home" class="card"><h2>Deine Bereiche</h2><button onclick="show('blood')">❤️ Blutdruck</button><button onclick="show('meds')">💊 Medikamente</button><button onclick="show('dates')">📅 Arzttermine & Adressbuch</button><button onclick="show('weight')">⚖️ Gewichtskontrolle</button><button onclick="show('backup')">🔐 Datensicherung</button></section><section id="blood" class="card" hidden><h2>Blutdruck eintragen</h2><form id="form"><label>Datum<input id="date" type="date" required></label><label>Uhrzeit<input id="time" type="time" required></label><label>Systole (mmHg)<input id="sys" type="number" min="1" required></label><label>Diastole (mmHg)<input id="dia" type="number" min="1" required></label><label>Puls (Schläge/min)<input id="pulse" type="number" min="1" required></label><button>Messung speichern</button></form><h2>Dein Blutdruckverlauf</h2><p><span style="color:#1261ae;font-weight:700">● Systole</span> &nbsp; <span style="color:#d46b3b;font-weight:700">● Diastole</span></p><canvas id="bloodChart" role="img" aria-label="Verlauf von Systole und Diastole in mmHg"></canvas><small>Das Diagramm zeigt deine gespeicherten Blutdruckwerte in zeitlicher Reihenfolge.</small><h2>Gespeicherte Messungen</h2><div id="entries"></div><button onclick="exportData()">Messungen als CSV sichern</button><small>Die Daten liegen nur im lokalen Browserspeicher dieses Geräts. Sie können beim Löschen von Website-Daten verloren gehen. Die CSV-Datei bitte sicher aufbewahren.</small></section><section id="meds" class="card" hidden><h2>💊 Medikamente</h2><p>Verwalte tägliche und wöchentliche Medikamente, hake Einnahmen ab und behalte den Vorrat im Blick.</p>
+<form id="medform"><input id="medid" type="hidden"><label>Medikamentenname<input id="medname" required maxlength="120" placeholder="Name"></label><label>Dosierung<input id="meddose" required maxlength="120" placeholder="z. B. 1 Tablette"></label><label>Einnahmezeiten</label><div id="medtimefields"></div><button type="button" id="addMedTime" style="background:#dcecff;color:#164c83">+ Weitere Einnahmezeit hinzufügen</button><label>Einnahmehäufigkeit<select id="medfrequency"><option value="daily">Täglich</option><option value="weekly">An bestimmten Wochentagen</option></select></label><div id="medweekdays" hidden><p>Wähle die Einnahmetage:</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"><label style="font-size:14px"><input type="checkbox" class="medweekday" value="1" style="width:auto">Mo</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="2" style="width:auto">Di</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="3" style="width:auto">Mi</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="4" style="width:auto">Do</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="5" style="width:auto">Fr</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="6" style="width:auto">Sa</label><label style="font-size:14px"><input type="checkbox" class="medweekday" value="0" style="width:auto">So</label></div></div><label>Tabletten / Einheiten im Vorrat<input id="medstock" type="number" min="0" step="0.5" inputmode="decimal" placeholder="z. B. 30 (optional)"></label><label>Verbrauch pro Einnahme (Einheiten)<input id="medunits" type="number" min="0.5" step="0.5" value="1" required></label><label>Warnung bei Vorrat von höchstens<input id="medthreshold" type="number" min="0" step="0.5" value="7" required></label><button id="medsave">Medikament speichern</button></form><h2>📋 Heutiger Einnahmeplan</h2><p><small>Zum Abhaken nach tatsächlicher Einnahme. Häkchen werden für den jeweiligen Tag gespeichert.</small></p><div id="medtoday"></div><h2>📦 Medikamentenvorrat</h2><div id="medinventory"></div><h2>Meine Medikamente</h2><div id="medentries"></div><button type="button" onclick="exportMedicationBackup()">Medikamente und Einnahmen sichern (JSON)</button><small>Die Angaben werden nur auf diesem Gerät gespeichert. Automatische Benachrichtigungen sind noch nicht eingerichtet. Die Vorratsberechnung erfolgt beim Abhaken; sie ist keine medizinische Kontrolle. Verlasse dich bei wichtigen Einnahmen nicht allein auf diese App.</small></section><section id="weight" class="card" hidden><h2>⚖️ Wöchentliche Gewichtskontrolle</h2><p>Trage dein Gewicht möglichst einmal pro Woche ein.</p><form id="weightForm"><input type="hidden" id="weightEdit"><label>Datum<input id="weightDate" type="date" required></label><label>Gewicht in kg<input id="weightKg" type="number" min="1" max="500" step="0.1" inputmode="decimal" required placeholder="z. B. 78,5"></label><button id="weightSave">Gewicht speichern</button></form><div id="weightChange" class="weight-info"></div><h2>Dein Gewichtsverlauf</h2><canvas id="weightChart" role="img" aria-label="Diagramm der gespeicherten Gewichtswerte"></canvas><h2>Deine Einträge</h2><div id="weightEntries"></div><button type="button" onclick="exportWeights()">Gewichtswerte als CSV sichern</button><p><small>Die Werte werden nur im lokalen Speicher dieses Browsers abgelegt. Sichere sie regelmäßig. Das Diagramm zeigt alle gespeicherten Messungen; eine automatische wöchentliche Erinnerung ist noch nicht eingerichtet.</small></p></section><section id="dates" class="card" hidden><h2>📅 Arzttermine</h2><p>Wähle einen Arzt aus deinem Adressbuch und trage den Termin ein.</p><form id="appointmentForm"><input type="hidden" id="appointmentId"><label>Arzt / Praxis<select id="appointmentDoctor" required></select></label><label>Datum<input type="date" id="appointmentDate" required></label><label>Uhrzeit<input type="time" id="appointmentTime" required></label><label>Grund des Termins<input id="appointmentReason" maxlength="200" placeholder="z. B. Kontrolle"></label><button>Termin speichern</button></form><h2>Meine Termine</h2><div id="appointmentList"></div><p><small>Erinnerungszeiten: 1 Tag und 1 Stunde vorher. Automatische iPhone-Benachrichtigungen sind in dieser Version noch nicht möglich. Nutze für wichtige Termine zusätzlich den iPhone-Kalender.</small></p><hr><h2>📒 Arzt-Adressbuch</h2><form id="doctorForm"><input type="hidden" id="doctorId"><label>Name / Praxis *<input id="doctorName" maxlength="120" required></label><label>Fachrichtung *<input id="doctorSpecialty" maxlength="120" required></label><label>Adresse<input id="doctorAddress" maxlength="250"></label><label>Telefonnummer<input id="doctorPhone" type="tel" maxlength="60"></label><label>E-Mail<input id="doctorEmail" type="email" maxlength="120"></label><label>Homepage<input id="doctorWeb" type="url" placeholder="https://" maxlength="250"></label><button id="doctorSave">Arzt speichern</button></form><h2>Gespeicherte Ärzte</h2><div id="doctorList"></div><button type="button" onclick="exportHealth()">Ärzte und Termine sichern (JSON)</button><p><small>Alle Daten werden im lokalen Speicher dieser Website auf dem iPhone abgelegt. Sichere sie regelmäßig. Es gibt noch keinen Face-ID-Schutz.</small></p></section><section id="backup" class="card" hidden><h2>🔐 Datensicherung & Wiederherstellung</h2><p>Hier kannst du deine Blutdruckwerte, Medikamente, Einnahmebestätigungen, Vorräte, Ärzte, Termine und Gewichtswerte gemeinsam sichern.</p><button type="button" onclick="exportFullBackup()">📥 Gesamte Datensicherung erstellen</button><p><small>Die Sicherungsdatei enthält vertrauliche Gesundheitsdaten. Bewahre sie geschützt auf und teile sie nicht öffentlich. Speichere sie am besten in der Dateien-App an einem sicheren Ort.</small></p><hr><h2>📄 Arztbericht als PDF</h2><p>Erstelle einen lesbaren Bericht mit Medikamenten, Blutdruckwerten und Gewicht. Du entscheidest selbst, ob du ihn mit deinem Arzt teilst.</p><button type="button" onclick="printDoctorReport()">📄 Arztbericht als PDF speichern / drucken</button><p><small>Auf dem iPhone öffnet sich die Druckansicht. Dort kannst du den Bericht über „Teilen“ als PDF in „Dateien“ sichern oder versenden. Der Bericht wird nicht automatisch verschickt.</small></p><hr><h2>Datensicherung wiederherstellen</h2><p>Wähle eine zuvor mit dieser Funktion erstellte .backup- oder ältere JSON-Sicherungsdatei aus. Vor dem Wiederherstellen zeigen wir dir, welche Einträge darin enthalten sind.</p><label>Sicherungsdatei auswählen<input id="restoreFile" type="file" accept=".backup,.json,application/json,application/octet-stream"></label><div id="restorePreview" class="weight-info" aria-live="polite">Noch keine Sicherungsdatei ausgewählt.</div><button id="restoreButton" type="button" disabled onclick="restoreFullBackup()">🔄 Daten wiederherstellen</button><p><small>Achtung: Bei der Wiederherstellung werden die aktuellen Daten dieser App durch die Daten aus der Sicherung ersetzt. Erstelle vorher unbedingt eine aktuelle Sicherung. Nach dem Wiederherstellen wird die App neu geladen.</small></p></section></section><section id="doctorPrint" hidden aria-label="Arztbericht"></section></main><script>const key="matzes_medi_bp_v1";let records=[];try{records=JSON.parse(localStorage.getItem(key)||"[]")}catch(e){}function start(){document.getElementById("welcome").hidden=true;document.getElementById("welcome").style.display="none";document.getElementById("app").style.display="block";show("home")}function show(id){for(const x of ["home","blood","meds","dates","weight","backup"])document.getElementById(x).hidden=x!==id;if(id==="blood")render();if(id==="meds")renderMeds();if(id==="dates")renderAppointments();if(id==="weight")renderWeights()}function setNow(){const d=new Date();document.getElementById("date").value=[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");document.getElementById("time").value=[d.getHours(),d.getMinutes()].map(x=>String(x).padStart(2,"0")).join(":")}setNow();document.getElementById("form").onsubmit=e=>{e.preventDefault();records.push({date:date.value,time:time.value,sys:sys.value,dia:dia.value,pulse:pulse.value});try{localStorage.setItem(key,JSON.stringify(records))}catch(err){alert("Speichern nicht möglich. Bitte Speicherplatz prüfen.");return}e.target.reset();setNow();render()};function render(){const el=document.getElementById("entries");el.replaceChildren();for(const [i,r] of [...records].reverse().entries()){const div=document.createElement("div");div.className="entry";div.textContent=`${r.date} ${r.time} — ${r.sys}/${r.dia} mmHg, Puls ${r.pulse}`;el.appendChild(div)}if(!records.length)el.textContent="Noch keine Messungen vorhanden.";drawBloodChart()}function drawBloodChart(){
+ const canvas=document.getElementById('bloodChart');if(!canvas)return;
+ const ctx=canvas.getContext('2d'),width=Math.max(260,Math.round(canvas.getBoundingClientRect().width)||320),height=240,dpr=window.devicePixelRatio||1;
+ canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+ const data=records.filter(r=>Number.isFinite(Number(r.sys))&&Number.isFinite(Number(r.dia))&&Number(r.sys)>0&&Number(r.dia)>0).slice().sort((a,b)=>(String(a.date)+' '+String(a.time)).localeCompare(String(b.date)+' '+String(b.time)));
+ ctx.font='12px -apple-system, sans-serif';if(!data.length){ctx.fillStyle='#53677e';ctx.fillText('Noch keine Blutdruckmessungen vorhanden',12,36);return}
+ const left=45,right=16,top=22,bottom=48,pw=width-left-right,ph=height-top-bottom;
+ const values=data.flatMap(r=>[Number(r.sys),Number(r.dia)]),min=Math.min(...values),max=Math.max(...values),padding=Math.max(10,(max-min)*.12),low=Math.max(0,Math.floor((min-padding)/10)*10),high=Math.ceil((max+padding)/10)*10;
+ ctx.strokeStyle='#dce7f3';ctx.fillStyle='#53677e';ctx.lineWidth=1;
+ for(let j=0;j<=4;j++){const y=top+j*ph/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(width-right,y);ctx.stroke();ctx.fillText(String(Math.round(high-(high-low)*j/4)),4,y+4)}
+ const xs=data.map((_,i)=>data.length===1?left+pw/2:left+i*pw/(data.length-1));
+ for(const [field,color] of [['sys','#1261ae'],['dia','#d46b3b']]){
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;
+  data.forEach((r,i)=>{const y=top+(high-Number(r[field]))/(high-low)*ph;i?ctx.lineTo(xs[i],y):ctx.moveTo(xs[i],y)});ctx.stroke();ctx.fillStyle=color;
+  data.forEach((r,i)=>{const y=top+(high-Number(r[field]))/(high-low)*ph;ctx.beginPath();ctx.arc(xs[i],y,3.5,0,Math.PI*2);ctx.fill()})
+ }
+ const label=r=>String(r.date||'').slice(5).replace('-','.');ctx.fillStyle='#53677e';ctx.textAlign='left';ctx.fillText(label(data[0]),left,height-17);ctx.textAlign='right';ctx.fillText(label(data[data.length-1]),width-right,height-17);ctx.textAlign='start';ctx.fillText('mmHg',4,12)
 }
+function exportData(){const rows=[["Datum","Uhrzeit","Systole","Diastole","Puls"],...records.map(r=>[r.date,r.time,r.sys,r.dia,r.pulse])];const csv=rows.map(r=>r.join(";")).join("\r\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));a.download="Blutdruck_Matzes_Medi_Sender.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+const medkey="matzes_medi_meds_v1", intakeKey="matzes_medi_intakes_v1";
+let medications=[];try{const v=JSON.parse(localStorage.getItem(medkey)||"[]");if(Array.isArray(v))medications=v}catch(e){}
+let intakes={};try{const v=JSON.parse(localStorage.getItem(intakeKey)||"{}");if(v&&typeof v==="object"&&!Array.isArray(v))intakes=v}catch(e){}
+function saveMeds(){try{localStorage.setItem(medkey,JSON.stringify(medications));return true}catch(e){alert("Speichern nicht möglich.");return false}}
+function saveIntakes(){try{localStorage.setItem(intakeKey,JSON.stringify(intakes));return true}catch(e){alert("Einnahme konnte nicht gespeichert werden.");return false}}
+function addMedTime(value=""){
+ const list=document.getElementById("medtimefields");const row=document.createElement("div");row.style.cssText="display:flex;align-items:center;gap:8px;margin:5px 0";
+ const input=document.createElement("input");input.type="time";input.required=true;input.value=value;input.setAttribute("aria-label","Einnahmezeit");input.style.cssText="flex:1;min-width:0;margin:0";
+ const remove=document.createElement("button");remove.type="button";remove.textContent="Entfernen";remove.style.cssText="width:auto;flex:none;padding:12px;background:#6b7789;font-size:14px";
+ remove.onclick=()=>{if(list.children.length>1)row.remove();else alert("Bitte mindestens eine Einnahmezeit angeben.")};row.append(input,remove);list.appendChild(row)
+}
+function setMedTimes(times){document.getElementById("medtimefields").replaceChildren();(Array.isArray(times)&&times.length?times:[""]).forEach(addMedTime)}
+document.getElementById("addMedTime").onclick=()=>addMedTime();setMedTimes([""]);
+document.getElementById("medfrequency").onchange=()=>document.getElementById("medweekdays").hidden=document.getElementById("medfrequency").value!=="weekly";
+function medSchedule(m){return m.frequency==="weekly"?"Wöchentlich: "+(m.days||[]).map(d=>(["So","Mo","Di","Mi","Do","Fr","Sa"])[d]).join(", "):"Täglich"}
+function medDue(m,day){return m.frequency!=="weekly"||(m.days||[]).includes(day)}
+function todayString(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
+function renderMeds(){
+ const el=document.getElementById("medentries");el.replaceChildren();
+ if(!medications.length)el.textContent="Noch keine Medikamente eingetragen.";
+ for(const m of medications){
+  const d=document.createElement("details");d.className="entry";
+  const summary=document.createElement("summary");summary.textContent=m.name+" — "+m.dose+" · "+(Array.isArray(m.times)?m.times.join(", "):"")+" · "+medSchedule(m);d.appendChild(summary);
+  const actions=document.createElement("div");actions.className="entry-actions";
+  const edit=document.createElement("button");edit.type="button";edit.textContent="Bearbeiten";edit.onclick=()=>{
+   document.getElementById("medid").value=m.id;document.getElementById("medname").value=m.name;document.getElementById("meddose").value=m.dose;
+   setMedTimes(m.times);document.getElementById("medfrequency").value=m.frequency==="weekly"?"weekly":"daily";
+   document.getElementById("medweekdays").hidden=m.frequency!=="weekly";
+   document.querySelectorAll(".medweekday").forEach(c=>c.checked=(m.days||[]).includes(Number(c.value)));
+   document.getElementById("medstock").value=m.stock==null?"":m.stock;
+   document.getElementById("medunits").value=m.units||1;document.getElementById("medthreshold").value=m.threshold??7;
+   document.getElementById("medsave").textContent="Änderungen speichern";document.getElementById("medform").scrollIntoView({behavior:"smooth"});
+  };actions.appendChild(edit);
+  const del=document.createElement("button");del.type="button";del.textContent="Löschen";del.style.background="#9d3545";
+  del.onclick=()=>{if(confirm("Dieses Medikament wirklich löschen? Die gespeicherte Einnahmehistorie bleibt in der Sicherung, wird aber nicht mehr angezeigt.")){const old=medications;medications=medications.filter(x=>x.id!==m.id);if(saveMeds())renderMeds();else medications=old}};actions.appendChild(del);
+  d.appendChild(actions);el.appendChild(d)
+ }
+ renderToday();renderInventory();
+}
+function renderToday(){
+ const el=document.getElementById("medtoday");el.replaceChildren();const day=new Date().getDay(),date=todayString();let count=0;
+ for(const m of medications){if(!medDue(m,day))continue;for(const time of (m.times||[])){
+  count++;const k=JSON.stringify([m.id,date,time]);const row=document.createElement("label");row.style.cssText="display:flex;gap:12px;align-items:flex-start;background:#eef5ff;border-radius:10px;padding:12px;margin:8px 0";
+  const check=document.createElement("input");check.type="checkbox";check.style.cssText="width:24px;height:24px;flex:none;margin:2px 0";check.checked=!!intakes[k];
+  const txt=document.createElement("span");txt.textContent=time+" Uhr – "+m.name+" ("+m.dose+")";
+  check.onchange=()=>{
+   const was=!!intakes[k];const now=check.checked;if(was===now)return;
+   if(now){intakes[k]={date,time,medId:m.id,units:Number(m.units)||1};if(!saveIntakes()){delete intakes[k];check.checked=false;return}
+     if(m.stock!=null&&m.stock!==""){m.stock=Math.max(0,Number(m.stock)-(Number(m.units)||1));if(!saveMeds())alert("Einnahme gespeichert, Vorrat konnte nicht aktualisiert werden.")}
+   }else{const previous=intakes[k];delete intakes[k];if(!saveIntakes()){intakes[k]=previous;check.checked=true;return}
+     if(m.stock!=null&&m.stock!==""){m.stock=Number(m.stock)+(Number(previous.units)||1);saveMeds()}
+   }renderMeds();
+  };row.append(check,txt);el.appendChild(row)
+ }}if(!count)el.textContent="Für heute sind keine Medikamente geplant.";
+}
+function renderInventory(){const el=document.getElementById("medinventory");el.replaceChildren();if(!medications.length){el.textContent="Noch kein Medikamentenvorrat vorhanden.";return}
+ for(const m of medications){const row=document.createElement("div");row.className="entry";
+ const has=m.stock!==undefined&&m.stock!==null&&m.stock!=="";const low=has&&Number(m.stock)<=Number(m.threshold??7);
+ row.textContent=m.name+": "+(has?Number(m.stock).toLocaleString("de-DE")+" Einheiten":"Vorrat noch nicht erfasst")+(low?" ⚠️ Vorrat niedrig":"");if(low)row.style.color="#a33b27";el.appendChild(row)}
+}
+document.getElementById("medform").onsubmit=e=>{
+ e.preventDefault();const name=document.getElementById("medname").value.trim(),dose=document.getElementById("meddose").value.trim();
+ const times=[...document.querySelectorAll("#medtimefields input[type=time]")].map(x=>x.value.trim());
+ if(!times.length||times.some(x=>!/^([01]\d|2[0-3]):[0-5]\d$/.test(x))){alert("Bitte alle Einnahmezeiten mit dem Uhrzeitwähler auswählen.");return}
+ const frequency=document.getElementById("medfrequency").value;
+ const days=[...document.querySelectorAll(".medweekday:checked")].map(x=>Number(x.value));
+ if(frequency==="weekly"&&!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}
+ const stockValue=document.getElementById("medstock").value;
+ const stock=stockValue===""?null:Number(stockValue),units=Number(document.getElementById("medunits").value),threshold=Number(document.getElementById("medthreshold").value);
+ if((stock!==null&&(!Number.isFinite(stock)||stock<0))||!Number.isFinite(units)||units<=0||!Number.isFinite(threshold)||threshold<0){alert("Bitte gültige Vorratszahlen eingeben.");return}
+ const patch={name,dose,times:[...new Set(times)].sort(),frequency,days,stock,units,threshold};const id=document.getElementById("medid").value;
+ if(id){const m=medications.find(x=>x.id===id);if(m)Object.assign(m,patch)}else medications.push({id:String(Date.now())+Math.random(),...patch});
+ if(saveMeds()){e.target.reset();setMedTimes([""]);document.getElementById("medid").value="";document.getElementById("medweekdays").hidden=true;document.getElementById("medsave").textContent="Medikament speichern";renderMeds()}
+};
+function exportMedicationBackup(){const data={medications,intakes,exportedAt:new Date().toISOString()};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="Matzes_Medikamente_Sicherung.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+renderMeds();
+
+const doctorKey='matzes_medi_doctors_v1', appointmentKey='matzes_medi_appointments_v1';
+function readArray(key){try{let a=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+let doctors=readArray(doctorKey),appointments=readArray(appointmentKey);
+function storeArray(key,data){try{localStorage.setItem(key,JSON.stringify(data));return true}catch(e){alert('Speichern fehlgeschlagen. Bitte Speicherplatz prüfen.');return false}}
+function makeButton(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;return b}
+function link(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.style.display='inline-block';a.style.margin='8px 12px 8px 0';return a}
+function renderDoctors(){const list=document.getElementById('doctorList');list.replaceChildren();const sel=document.getElementById('appointmentDoctor'),selected=sel.value;sel.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='Bitte Arzt auswählen';sel.appendChild(blank);doctors.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.name+' – '+d.specialty;sel.appendChild(o)});sel.value=selected;
+ if(!doctors.length)list.textContent='Noch keine Ärzte angelegt.';
+ doctors.forEach(d=>{const el=document.createElement('details');el.className='entry';const name=document.createElement('summary');name.textContent=d.name+' – '+d.specialty;el.appendChild(name);const actions=document.createElement('div');actions.className='entry-actions';if(d.address){const p=document.createElement('p');p.textContent=d.address;actions.appendChild(p);actions.appendChild(link('🗺️ Karte','https://maps.apple.com/?q='+encodeURIComponent(d.address)))}if(d.phone)actions.appendChild(link('📞 Anrufen','tel:'+d.phone.replace(/[^+\d]/g,'')));if(d.email)actions.appendChild(link('✉️ E-Mail','mailto:'+encodeURIComponent(d.email)));if(d.web&&/^https?:\/\//i.test(d.web))actions.appendChild(link('🌐 Homepage',d.web));actions.appendChild(makeButton('Bearbeiten',()=>{for(const [k,v] of Object.entries({doctorId:d.id,doctorName:d.name,doctorSpecialty:d.specialty,doctorAddress:d.address,doctorPhone:d.phone,doctorEmail:d.email,doctorWeb:d.web}))document.getElementById(k).value=v||'';document.getElementById('doctorSave').textContent='Änderungen speichern';document.getElementById('doctorForm').scrollIntoView({behavior:'smooth'})}));actions.appendChild(makeButton('Löschen',()=>{if(appointments.some(a=>a.doctorId===d.id)){alert('Für diesen Arzt sind noch Termine gespeichert. Bitte zuerst diese Termine löschen.');return}if(confirm('Arzt wirklich löschen?')){doctors=doctors.filter(x=>x.id!==d.id);if(storeArray(doctorKey,doctors))renderAppointments()}}));el.appendChild(actions);list.appendChild(el)})}
+document.getElementById('doctorForm').onsubmit=e=>{e.preventDefault();const get=id=>document.getElementById(id).value.trim(),id=get('doctorId');const d={id:id||String(Date.now())+Math.random(),name:get('doctorName'),specialty:get('doctorSpecialty'),address:get('doctorAddress'),phone:get('doctorPhone'),email:get('doctorEmail'),web:get('doctorWeb')};if(id){const i=doctors.findIndex(x=>x.id===id);if(i>=0)doctors[i]=d}else doctors.push(d);if(storeArray(doctorKey,doctors)){e.target.reset();document.getElementById('doctorSave').textContent='Arzt speichern';renderAppointments()}};
+function renderAppointments(){renderDoctors();const list=document.getElementById('appointmentList');list.replaceChildren();if(!appointments.length)list.textContent='Noch keine Termine eingetragen.';appointments.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).forEach(a=>{const d=doctors.find(x=>x.id===a.doctorId);const el=document.createElement('details');el.className='entry';const p=document.createElement('summary');p.textContent=a.date.split('-').reverse().join('.')+' um '+a.time+' – '+(d?d.name:'Arzt nicht gefunden')+(a.reason?' – '+a.reason:'');el.appendChild(p);const actions=document.createElement('div');actions.className='entry-actions';const reminder=document.createElement('small');reminder.textContent='Erinnerung geplant: 1 Tag und 1 Stunde vorher (noch keine Push-Mitteilung).';actions.appendChild(reminder);actions.appendChild(makeButton('Bearbeiten',()=>{for(const [k,v] of Object.entries({appointmentId:a.id,appointmentDoctor:a.doctorId,appointmentDate:a.date,appointmentTime:a.time,appointmentReason:a.reason}))document.getElementById(k).value=v||'';document.getElementById('appointmentForm').scrollIntoView({behavior:'smooth'})}));actions.appendChild(makeButton('Löschen',()=>{if(confirm('Termin wirklich löschen?')){appointments=appointments.filter(x=>x.id!==a.id);if(storeArray(appointmentKey,appointments))renderAppointments()}}));el.appendChild(actions);list.appendChild(el)})}
+document.getElementById('appointmentForm').onsubmit=e=>{e.preventDefault();const get=id=>document.getElementById(id).value,id=get('appointmentId');const a={id:id||String(Date.now())+Math.random(),doctorId:get('appointmentDoctor'),date:get('appointmentDate'),time:get('appointmentTime'),reason:get('appointmentReason').trim()};if(id){const i=appointments.findIndex(x=>x.id===id);if(i>=0)appointments[i]=a}else appointments.push(a);if(storeArray(appointmentKey,appointments)){e.target.reset();renderAppointments()}};
+function exportHealth(){const data={version:3,exported:new Date().toISOString(),doctors,appointments};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Matzes_Medi_Sender_Arzttermine_Backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+const weightKey='matzes_medi_weight_v1';let weights=readArray(weightKey);
+function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+document.getElementById('weightDate').value=localDate();
+document.getElementById('weightForm').onsubmit=e=>{e.preventDefault();const date=document.getElementById('weightDate').value,kg=Number(document.getElementById('weightKg').value),edit=document.getElementById('weightEdit').value;if(!date||!Number.isFinite(kg)||kg<1||kg>500){alert('Bitte ein gültiges Gewicht eingeben.');return}const next=weights.slice();if(edit){const i=next.findIndex(x=>x.id===edit);if(i>=0)next[i]={id:edit,date,kg};else next.push({id:edit,date,kg})}else next.push({id:String(Date.now())+Math.random().toString(36).slice(2),date,kg});if(!storeArray(weightKey,next))return;weights=next;e.target.reset();document.getElementById('weightEdit').value='';document.getElementById('weightSave').textContent='Gewicht speichern';document.getElementById('weightDate').value=localDate();renderWeights()};
+function editWeight(id){const r=weights.find(x=>x.id===id);if(!r)return;document.getElementById('weightEdit').value=id;document.getElementById('weightDate').value=r.date;document.getElementById('weightKg').value=r.kg;document.getElementById('weightSave').textContent='Änderung speichern';document.getElementById('weightForm').scrollIntoView({behavior:'smooth',block:'start'})}
+function deleteWeight(id){if(!confirm('Diesen Gewichtseintrag wirklich löschen?'))return;const next=weights.filter(x=>x.id!==id);if(storeArray(weightKey,next)){weights=next;renderWeights()}}
+function renderWeights(){const ordered=weights.filter(x=>x.date&&Number.isFinite(Number(x.kg))).slice().sort((a,b)=>a.date.localeCompare(b.date));const el=document.getElementById('weightEntries');el.replaceChildren();const change=document.getElementById('weightChange');if(!ordered.length){change.textContent='Noch keine Gewichtswerte vorhanden.';el.textContent='Noch keine Einträge vorhanden.'}else{const last=ordered[ordered.length-1],prev=ordered[ordered.length-2];change.textContent='Letzte Messung: '+Number(last.kg).toLocaleString('de-DE')+' kg'+(prev?' · Veränderung zur vorherigen Messung: '+(last.kg-prev.kg>0?'+':'')+(last.kg-prev.kg).toLocaleString('de-DE',{maximumFractionDigits:1})+' kg':'');for(const r of ordered.slice().reverse()){const details=document.createElement('details');details.className='entry';const summary=document.createElement('summary');summary.textContent=r.date+' · '+Number(r.kg).toLocaleString('de-DE')+' kg';details.appendChild(summary);const actions=document.createElement('div');actions.className='entry-actions';const edit=document.createElement('button');edit.textContent='Bearbeiten';edit.onclick=()=>editWeight(r.id);const del=document.createElement('button');del.textContent='Löschen';del.onclick=()=>deleteWeight(r.id);actions.append(edit,del);details.appendChild(actions);el.appendChild(details)}}drawWeightChart(ordered)}
+function drawWeightChart(data){const canvas=document.getElementById('weightChart'),ctx=canvas.getContext('2d');const width=Math.max(250,Math.round(canvas.getBoundingClientRect().width)||320),height=230,dpr=window.devicePixelRatio||1;canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.font='12px -apple-system, sans-serif';if(!data.length){ctx.fillStyle='#53677e';ctx.fillText('Noch keine Daten für das Diagramm',12,35);return}const left=52,right=18,top=22,bottom=44,plotW=width-left-right,plotH=height-top-bottom;const vals=data.map(x=>Number(x.kg)),min=Math.min(...vals),max=Math.max(...vals),pad=Math.max(1,(max-min)*.2),low=Math.max(0,min-pad),high=max+pad;ctx.strokeStyle='#dce7f3';ctx.fillStyle='#53677e';ctx.lineWidth=1;for(let j=0;j<=4;j++){const y=top+j*plotH/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(width-right,y);ctx.stroke();ctx.fillText((high-(high-low)*j/4).toFixed(1),4,y+4)}const xs=data.map((r,i)=>{const first=Date.parse(data[0].date+'T12:00:00'),last=Date.parse(data[data.length-1].date+'T12:00:00'),t=Date.parse(r.date+'T12:00:00');return last===first?left+plotW/2:left+(t-first)/(last-first)*plotW});const ys=vals.map(v=>top+(high-v)/(high-low)*plotH);ctx.strokeStyle='#1261ae';ctx.lineWidth=3;ctx.beginPath();xs.forEach((x,i)=>i?ctx.lineTo(x,ys[i]):ctx.moveTo(x,ys[i]));ctx.stroke();ctx.fillStyle='#1261ae';xs.forEach((x,i)=>{ctx.beginPath();ctx.arc(x,ys[i],4,0,Math.PI*2);ctx.fill()});ctx.fillStyle='#53677e';ctx.textAlign='left';ctx.fillText(data[0].date.slice(5).replace('-','.'),left,height-15);ctx.textAlign='right';ctx.fillText(data[data.length-1].date.slice(5).replace('-','.'),width-right,height-15);ctx.textAlign='start'}
+function exportWeights(){const rows=[['Datum','Gewicht (kg)'],...weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,String(x.kg).replace('.',',')])];const csv=rows.map(r=>r.join(';')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='Matzes_Medi_Sender_Gewicht.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+// Version 10: complete local-only backup and restore. No data is uploaded.
+const backupKeys={blood:"matzes_medi_bp_v1",medications:"matzes_medi_meds_v1",intakes:"matzes_medi_intakes_v1",doctors:"matzes_medi_doctors_v1",appointments:"matzes_medi_appointments_v1",weights:"matzes_medi_weight_v1"};
+let pendingRestore=null;
+function downloadJSON(data,filename){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/octet-stream"}));const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function exportFullBackup(){
+ const data={};try{for(const [name,k] of Object.entries(backupKeys)){const raw=localStorage.getItem(k);data[name]=raw===null?(name==="intakes"?{}:[]):JSON.parse(raw)}}catch(e){alert("Die Daten konnten nicht vollständig gelesen werden. Bitte die bisherigen Einzelsicherungen verwenden.");return}
+ const valid=validateFullBackup({format:"matzes-medi-sender-full-backup",version:1,data});if(!valid){alert("Ein Datenbereich enthält ein unerwartetes Format. Bitte die bisherigen Einzelsicherungen verwenden.");return}
+ const d=new Date(),stamp=[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+ downloadJSON({format:"matzes-medi-sender-full-backup",version:1,createdAt:d.toISOString(),data},"Matzes_Medi_Sender_Gesamtsicherung_"+stamp+".backup");
+}
+function validateFullBackup(b){
+ if(!b||typeof b!=="object"||Array.isArray(b)||b.format!=="matzes-medi-sender-full-backup"||b.version!==1||!b.data||typeof b.data!=="object"||Array.isArray(b.data))return false;
+ for(const name of ["blood","medications","doctors","appointments","weights"]){if(!Array.isArray(b.data[name])||b.data[name].length>100000)return false}
+ const intake=b.data.intakes;if(!intake||typeof intake!=="object"||Array.isArray(intake))return false;
+ // Reject malformed records and prototype-polluting property names.
+ for(const name of ["blood","medications","doctors","appointments","weights"]){if(!b.data[name].every(x=>x&&typeof x==="object"&&!Array.isArray(x)))return false}
+ for(const k of Object.keys(intake)){if(k==="__proto__"||k==="constructor"||k==="prototype")return false;const x=intake[k];if(!x||typeof x!=="object"||Array.isArray(x))return false}
+ return true;
+}
+const restoreInput=document.getElementById("restoreFile"),restorePreview=document.getElementById("restorePreview"),restoreButton=document.getElementById("restoreButton");
+restoreInput.addEventListener("change",async()=>{
+ pendingRestore=null;restoreButton.disabled=true;restorePreview.textContent="Datei wird geprüft …";
+ const file=restoreInput.files&&restoreInput.files[0];if(!file){restorePreview.textContent="Noch keine Sicherungsdatei ausgewählt.";return}
+ if(file.size>15*1024*1024){restorePreview.textContent="Diese Sicherungsdatei ist zu groß (maximal 15 MB).";return}
+ try{const parsed=JSON.parse(await file.text());if(!validateFullBackup(parsed))throw Error("format");pendingRestore=parsed;
+ const d=parsed.data;restorePreview.textContent="Sicherung erkannt: "+d.blood.length+" Blutdruckmessungen, "+d.medications.length+" Medikamente, "+Object.keys(d.intakes).length+" Einnahmebestätigungen, "+d.doctors.length+" Ärzte, "+d.appointments.length+" Termine, "+d.weights.length+" Gewichtseinträge. Bitte vor dem Wiederherstellen die aktuellen Daten sichern.";restoreButton.disabled=false;
+ }catch(e){restorePreview.textContent="Die Datei ist keine gültige Gesamtsicherung von Matzes Medi-Sender. Es wurde nichts verändert."}
+});
+function restoreFullBackup(){
+ if(!pendingRestore||!validateFullBackup(pendingRestore))return;
+ if(!confirm("WICHTIG: Die aktuellen Gesundheitsdaten in dieser App werden vollständig durch die Sicherung ersetzt. Hast du vorher eine aktuelle Sicherung erstellt?"))return;
+ if(!confirm("Wirklich wiederherstellen? Alle sechs Datenbereiche werden überschrieben."))return;
+ const previous={};try{
+  for(const k of Object.values(backupKeys))previous[k]=localStorage.getItem(k);
+  for(const [name,k] of Object.entries(backupKeys))localStorage.setItem(k,JSON.stringify(pendingRestore.data[name]));
+ }catch(e){let rolledBack=true;for(const [k,v] of Object.entries(previous)){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(err){rolledBack=false}}
+  alert(rolledBack?"Wiederherstellung fehlgeschlagen. Die bisherigen Daten wurden zurückgesetzt.":"Wiederherstellung fehlgeschlagen. Bitte keine weiteren Änderungen vornehmen und eine vorhandene Sicherung prüfen.");return}
+ alert("Wiederherstellung abgeschlossen. Die App wird jetzt neu geladen.");location.reload();
+}
+
+// Arztbericht: bewusst nur Anzeige und iOS-Druckdialog, keine Datenübertragung.
+function printDoctorReport(){
+ const out=document.getElementById("doctorPrint");out.replaceChildren();
+ const node=(tag,value,parent=out)=>{const el=document.createElement(tag);el.textContent=String(value);parent.appendChild(el);return el};
+ const table=(headers,rows)=>{if(!rows.length){node("p","Keine Einträge vorhanden.");return}const t=document.createElement("table"),thead=document.createElement("thead"),tr=document.createElement("tr");headers.forEach(x=>node("th",x,tr));thead.appendChild(tr);t.appendChild(thead);const body=document.createElement("tbody");rows.forEach(row=>{const r=document.createElement("tr");row.forEach(x=>node("td",x==null?"":x,r));body.appendChild(r)});t.appendChild(body);out.appendChild(t)};
+ const fmt=x=>Number(x).toLocaleString("de-DE",{maximumFractionDigits:2});
+ node("h1","Matzes Medi-Sender – Arztbericht");node("p","Erstellt am "+new Date().toLocaleString("de-DE")+" · Persönliche Gesundheitsübersicht");
+ node("p","Die Angaben wurden selbst eingetragen und sind nicht ärztlich geprüft.");
+ node("h2","Aktuelle Medikamentenliste");
+ table(["Medikament","Dosierung","Einnahmezeiten","Rhythmus"],medications.map(m=>[m.name,m.dose,(m.times||[]).join(", "),medSchedule(m)]));
+ node("h2","Blutdruckmessungen (letzte 30)");
+ table(["Datum","Uhrzeit","Systole","Diastole","Puls"],records.slice().sort((a,b)=>(String(b.date)+String(b.time)).localeCompare(String(a.date)+String(a.time))).slice(0,30).map(r=>[r.date,r.time,r.sys+" mmHg",r.dia+" mmHg",r.pulse+" /min"]));
+ node("h2","Gewichtsverlauf (letzte 30)");
+ table(["Datum","Gewicht"],weights.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,30).map(r=>[r.date,fmt(r.kg)+" kg"]));
+ node("p","Hinweis: Nur zur Information. Bitte Medikamente nicht aufgrund dieses Berichts eigenständig ändern.");
+ window.print();
+}
+</script></body></html>
